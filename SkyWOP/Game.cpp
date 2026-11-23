@@ -30,7 +30,7 @@ void Game::Load()
 
 	//create an array of TOTAL GameObjects
 	GameObject gameObject;
-	mGameObjects.insert(mGameObjects.begin(), GameObjectId::TOTAL, gameObject);
+	mGameObjects.insert(mGameObjects.begin(), 3, gameObject);
 	//get a quad and cube mesh ready
 	Mesh& quadMesh = BuildQuad(d3d.GetMeshMgr());
 	Mesh& cubeMesh = BuildCube(d3d.GetMeshMgr());
@@ -48,28 +48,28 @@ void Game::Load()
 
 
 	//textured lit box
-	mGameObjects[GameObjectId::BOX].Initialise(cubeMesh);
-	mGameObjects[GameObjectId::BOX].GetPosition() = Vector3(0, -0.5f, 1);
-	mGameObjects[GameObjectId::BOX].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
-	Material mat = mGameObjects[GameObjectId::BOX].GetMesh().GetSubMesh(0).material;
+	mGameObjects[0].Initialise(cubeMesh);
+	mGameObjects[0].GetPosition() = Vector3(0, -0.5f, 1);
+	mGameObjects[0].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
+	Material mat = mGameObjects[0].GetMesh().GetSubMesh(0).material;
 	mat.gfxData.Set(Vector4(0.5, 0.5, 0.5, 1), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "test.dds");
 	mat.texture = "tiles.dds";
 
-	mGameObjects[GameObjectId::BOX].SetOverrideMat(&mat);
+	mGameObjects[0].SetOverrideMat(&mat);
 
 
 	//back wall
-	Setup(mGameObjects[GameObjectId::BACK_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(0, 0.5f, 3), Vector3(-PI / 2, 0, 0));
-	mat = mGameObjects[GameObjectId::BACK_WALL].GetMesh().GetSubMesh(0).material;
+	Setup(mGameObjects[1], quadMesh, Vector3(3, 1, 1.5f), Vector3(0, 0.5f, 3), Vector3(-PI / 2, 0, 0));
+	mat = mGameObjects[1].GetMesh().GetSubMesh(0).material;
 	mat.gfxData.Set(Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "wall.dds");
 	mat.texture = "wall.dds";
-	mGameObjects[GameObjectId::BACK_WALL].SetOverrideMat(&mat);
+	mGameObjects[1].SetOverrideMat(&mat);
 
 	//left wall
-	Setup(mGameObjects[GameObjectId::LEFT_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(-3, 0.5f, 0), Vector3(-PI / 2, -PI / 2, 0));
-	mGameObjects[GameObjectId::LEFT_WALL].SetOverrideMat(&mat);
+	Setup(mGameObjects[2], quadMesh, Vector3(3, 1, 1.5f), Vector3(-2, 0.5f, 0), Vector3(-PI / 2, -PI / 2, 0));
+	mGameObjects[2].SetOverrideMat(&mat);
 
 	//the sun
 	d3d.GetFX().SetupDirectionalLight(0, true, Vector3(-0.7f, -0.7f, 0.7f), Vector3(0.47f, 0.47f, 0.47f), Vector3(0.15f, 0.15f, 0.15f), Vector3(0.25f, 0.25f, 0.25f));
@@ -100,7 +100,6 @@ void Game::Update(float dTime)
 {
 	//spin things around
 	mAngle += dTime * 0.5f;
-	mGameObjects[GameObjectId::BOX].GetRotation().y = mAngle;
 }
 
 void Game::Render(float dTime)
@@ -114,20 +113,31 @@ void Game::RenderGame(float dTime)
 	MyD3D& d3d = WinUtil::Get().GetD3D();
 	d3d.BeginRender(Colours::Black);
 
-	float alpha = 0.5f + sinf(mAngle * 2) * 0.5f;
-
-	//setup camera and projections, prep shaders
-	d3d.GetFX().SetPerFrameConsts(d3d.GetDeviceCtx(), mCamPos);
-	CreateViewMatrix(d3d.GetFX().GetViewMatrix(), mCamPos, Vector3(0, 0, 0), Vector3(0, 1, 0));
-	CreateProjectionMatrix(d3d.GetFX().GetProjectionMatrix(), 0.25f * PI, WinUtil::Get().GetAspectRatio(), 1, 1000.f);
-	Matrix w = Matrix::CreateRotationY(sinf(mAngle));
-	d3d.GetFX().SetPerObjConsts(d3d.GetDeviceCtx(), w);
+	SetUpCamera(d3d);
 
 	//render all GameObjects
 	for (auto& gameObject : mGameObjects)
 		d3d.GetFX().Render(gameObject);
 
 	d3d.EndRender();
+}
+
+inline void Game::SetUpCamera(MyD3D& d3d)
+{
+	//setup camera and projections
+	// View
+	d3d.GetFX().SetPerFrameConsts(d3d.GetDeviceCtx(), mCamPos);
+	constexpr DirectX::SimpleMath::Vector3 camTarget = { 0, 0, 0 }; // Looking at origin
+	constexpr DirectX::SimpleMath::Vector3 camUp = { 0, 0, 1 }; // +X to the right. +Z up. Relitive to screen
+	CreateViewMatrix(d3d.GetFX().GetViewMatrix(), mCamPos, camTarget, camUp);
+
+	// Projection
+	constexpr float fov = 0.25f * PI;
+	const float aspectRatio = WinUtil::Get().GetAspectRatio();
+	constexpr float nearClip = 1.f;
+	constexpr float farClip = 1000.f;
+	CreateProjectionMatrix(d3d.GetFX().GetProjectionMatrix(), fov, aspectRatio, nearClip, farClip);
+
 }
 
 //push the camera around and check for exit

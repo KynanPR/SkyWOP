@@ -9,9 +9,7 @@
 #include "GameObject.h"
 #include "singleton.h"
 
-/*
-Display a small scene and spin some GameObjects around
-*/
+
 class Game : public Singleton<Game>
 {
 public:
@@ -27,8 +25,8 @@ public:
 	LRESULT WindowsMssgHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	//a camera we can push around the scene
-	const DirectX::SimpleMath::Vector3 mDefCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
-	DirectX::SimpleMath::Vector3 mCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
+	const DirectX::SimpleMath::Vector3 mDefCamPos = { 0, 10, 0 };
+	DirectX::SimpleMath::Vector3 mCamPos = mDefCamPos;
 
 	//stick all GameObjects in a vector
 	std::vector<GameObject> mGameObjects;
@@ -45,6 +43,10 @@ private:
 	void Load();
 	//separate out in-game rendering
 	void RenderGame(float dTime);
+
+	// Set camera matricies
+	inline void SetUpCamera(MyD3D& d3d);
+
 };
 
 #endif

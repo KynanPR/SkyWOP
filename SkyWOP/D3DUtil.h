@@ -88,7 +88,7 @@ namespace Colours
 }
 
 //pie is always welcome!
-const float PI = 3.1415926535f;
+constexpr float PI = 3.1415926535f;
 
 //convert to and from degrees and radians
 inline float D2R(float x) { return (x * PI) / 180.0f; }
