@@ -3,23 +3,23 @@
 #include "Game.h"
 #include "GeometryBuilder.h"
 
-/*quick way to configure a model
-* m - IN/OUT model
+/*quick way to configure a GameObject
+* gameObject - IN/OUT GameObject
 * source - IN mesh to use
 * scale/pos/rot - IN
 */
-void Setup(Model& m, Mesh& source, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
+void Setup(GameObject& gameObject, Mesh& source, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
 {
-	m.Initialise(source);
-	m.GetScale() = scale;
-	m.GetPosition() = pos;
-	m.GetRotation() = rot;
+	gameObject.Initialise(source);
+	gameObject.GetScale() = scale;
+	gameObject.GetPosition() = pos;
+	gameObject.GetRotation() = rot;
 }
 
 //same as above, but most of the time we want a uniform scale
-void Setup(Model& m, Mesh& source, float scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
+void Setup(GameObject& gameObject, Mesh& source, float scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
 {
-	Setup(m, source, DirectX::SimpleMath::Vector3(scale, scale, scale), pos, rot);
+	Setup(gameObject, source, DirectX::SimpleMath::Vector3(scale, scale, scale), pos, rot);
 }
 
 
@@ -28,73 +28,73 @@ void Game::Load()
 	using namespace DirectX::SimpleMath;
 	MyD3D& d3d = WinUtil::Get().GetD3D();
 
-	//create an array of TOTAL models
-	Model m;
-	mModels.insert(mModels.begin(), Modelid::TOTAL, m);
+	//create an array of TOTAL GameObjects
+	GameObject gameObject;
+	mGameObjects.insert(mGameObjects.begin(), GameObjectId::TOTAL, gameObject);
 	//get a quad and cube mesh ready
 	Mesh& quadMesh = BuildQuad(d3d.GetMeshMgr());
 	Mesh& cubeMesh = BuildCube(d3d.GetMeshMgr());
 
 	//textured lit box
-	mModels[Modelid::BOX].Initialise(cubeMesh);
-	mModels[Modelid::BOX].GetPosition() = Vector3(0, -0.5f, 1);
-	mModels[Modelid::BOX].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
-	Material mat = mModels[3].GetMesh().GetSubMesh(0).material;
+	mGameObjects[GameObjectId::BOX].Initialise(cubeMesh);
+	mGameObjects[GameObjectId::BOX].GetPosition() = Vector3(0, -0.5f, 1);
+	mGameObjects[GameObjectId::BOX].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
+	Material mat = mGameObjects[3].GetMesh().GetSubMesh(0).material;
 	mat.gfxData.Set(Vector4(0.5, 0.5, 0.5, 1), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "tiles.dds");
 	mat.texture = "tiles.dds";
 	mat.flags |= Material::TFlags::TRANSPARENCY;	//this one uses blend factor controlled transparency
 	mat.SetBlendFactors(0.5, 0.5, 0.5, 1);
-	mModels[Modelid::BOX].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::BOX].SetOverrideMat(&mat);
 
 	//cross - meant to be see through so we want two of them
 	//one is the back of the cross, the other is the front
-	mModels[Modelid::CROSS].Initialise(cubeMesh);
+	mGameObjects[GameObjectId::CROSS].Initialise(cubeMesh);
 	mat.flags &= ~Material::TFlags::TRANSPARENCY;
-	mModels[Modelid::CROSS].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
-	mModels[Modelid::CROSS].GetPosition() = Vector3(1.5f, -0.45f, 1);
+	mGameObjects[GameObjectId::CROSS].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
+	mGameObjects[GameObjectId::CROSS].GetPosition() = Vector3(1.5f, -0.45f, 1);
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "cross.dds");
 	mat.texture = "cross";
 	mat.flags |= Material::TFlags::ALPHA_TRANSPARENCY;
 	mat.flags &= ~Material::TFlags::CCW_WINDING;	//render the back
-	mModels[Modelid::CROSS].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::CROSS].SetOverrideMat(&mat);
 
-	mModels[Modelid::CROSS2] = mModels[Modelid::CROSS];
+	mGameObjects[GameObjectId::CROSS2] = mGameObjects[GameObjectId::CROSS];
 	mat.flags |= Material::TFlags::CCW_WINDING;	//render the front
-	mModels[Modelid::CROSS2].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::CROSS2].SetOverrideMat(&mat);
 
-	//window - another see through box so we need two models
-	mModels[Modelid::WINDOW].Initialise(cubeMesh);
-	mModels[Modelid::WINDOW].GetScale() = Vector3(0.75f, 0.75f, 0.75f);
-	mModels[Modelid::WINDOW].GetPosition() = Vector3(-1.75f, 0, 1.25f);
+	//window - another see through box so we need two GameObjects
+	mGameObjects[GameObjectId::WINDOW].Initialise(cubeMesh);
+	mGameObjects[GameObjectId::WINDOW].GetScale() = Vector3(0.75f, 0.75f, 0.75f);
+	mGameObjects[GameObjectId::WINDOW].GetPosition() = Vector3(-1.75f, 0, 1.25f);
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "alphaWindow.dds");
 	mat.texture = "alphawindow";
 	mat.flags |= Material::TFlags::ALPHA_TRANSPARENCY;
 	mat.flags &= ~Material::TFlags::CCW_WINDING;	//render the back
-	mModels[Modelid::WINDOW].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::WINDOW].SetOverrideMat(&mat);
 
-	mModels[Modelid::WINDOW2] = mModels[Modelid::WINDOW];
+	mGameObjects[GameObjectId::WINDOW2] = mGameObjects[GameObjectId::WINDOW];
 	mat.flags |= Material::TFlags::CCW_WINDING;	//render the front
-	mModels[Modelid::WINDOW2].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::WINDOW2].SetOverrideMat(&mat);
 
 	//quad wood floor
-	Setup(mModels[Modelid::FLOOR], quadMesh, Vector3(3, 1, 3), Vector3(0, -1, 0), Vector3(0, 0, 0));
-	mat = mModels[Modelid::FLOOR].GetMesh().GetSubMesh(0).material;
+	Setup(mGameObjects[GameObjectId::FLOOR], quadMesh, Vector3(3, 1, 3), Vector3(0, -1, 0), Vector3(0, 0, 0));
+	mat = mGameObjects[GameObjectId::FLOOR].GetMesh().GetSubMesh(0).material;
 	mat.gfxData.Set(Vector4(0.9f, 0.8f, 0.8f, 0), Vector4(0.9f, 0.8f, 0.8f, 0), Vector4(0.9f, 0.8f, 0.8f, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "floor.dds");
 	mat.texture = "floor.dds";
-	mModels[Modelid::FLOOR].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::FLOOR].SetOverrideMat(&mat);
 
 	//back wall
-	Setup(mModels[Modelid::BACK_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(0, 0.5f, 3), Vector3(-PI / 2, 0, 0));
+	Setup(mGameObjects[GameObjectId::BACK_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(0, 0.5f, 3), Vector3(-PI / 2, 0, 0));
 	mat.gfxData.Set(Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "wall.dds");
 	mat.texture = "wall.dds";
-	mModels[Modelid::BACK_WALL].SetOverrideMat(&mat);
+	mGameObjects[GameObjectId::BACK_WALL].SetOverrideMat(&mat);
 
 	//left wall
-	Setup(mModels[Modelid::LEFT_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(-3, 0.5f, 0), Vector3(-PI / 2, -PI / 2, 0));
-	mModels[Modelid::LEFT_WALL].SetOverrideMat(&mat);
+	Setup(mGameObjects[GameObjectId::LEFT_WALL], quadMesh, Vector3(3, 1, 1.5f), Vector3(-3, 0.5f, 0), Vector3(-PI / 2, -PI / 2, 0));
+	mGameObjects[GameObjectId::LEFT_WALL].SetOverrideMat(&mat);
 
 	//the sun
 	d3d.GetFX().SetupDirectionalLight(0, true, Vector3(-0.7f, -0.7f, 0.7f), Vector3(0.47f, 0.47f, 0.47f), Vector3(0.15f, 0.15f, 0.15f), Vector3(0.25f, 0.25f, 0.25f));
@@ -125,13 +125,13 @@ void Game::Update(float dTime)
 {
 	//spin things around
 	mAngle += dTime * 0.5f;
-	mModels[Modelid::BOX].GetRotation().y = mAngle;
+	mGameObjects[GameObjectId::BOX].GetRotation().y = mAngle;
 
-	mModels[Modelid::CROSS].GetRotation().y = -mAngle;
-	mModels[Modelid::CROSS2].GetRotation().y = -mAngle;
+	mGameObjects[GameObjectId::CROSS].GetRotation().y = -mAngle;
+	mGameObjects[GameObjectId::CROSS2].GetRotation().y = -mAngle;
 
-	mModels[Modelid::WINDOW].GetRotation().y = -mAngle * 0.5f;
-	mModels[Modelid::WINDOW2].GetRotation().y = -mAngle * 0.5f;
+	mGameObjects[GameObjectId::WINDOW].GetRotation().y = -mAngle * 0.5f;
+	mGameObjects[GameObjectId::WINDOW2].GetRotation().y = -mAngle * 0.5f;
 }
 
 void Game::Render(float dTime)
@@ -157,16 +157,16 @@ void Game::RenderGame(float dTime)
 	//main cube - forced transparency under pogram control (blend factors)
 	//update the blend factors and add some spinning spot lights
 	Vector3 dir = Vector3(1, 0, 0);
-	Matrix m = Matrix::CreateRotationY(mAngle);
-	dir = dir.TransformNormal(dir, m);
-	d3d.GetFX().SetupSpotLight(1, true, mModels[Modelid::BOX].GetPosition(), dir, Vector3(0.2f, 0.05f, 0.05f), Vector3(0.01f, 0.01f, 0.01f), Vector3(0.01f, 0.01f, 0.01f));
+	Matrix matrix = Matrix::CreateRotationY(mAngle);
+	dir = dir.TransformNormal(dir, matrix);
+	d3d.GetFX().SetupSpotLight(1, true, mGameObjects[GameObjectId::BOX].GetPosition(), dir, Vector3(0.2f, 0.05f, 0.05f), Vector3(0.01f, 0.01f, 0.01f), Vector3(0.01f, 0.01f, 0.01f));
 	dir *= -1;
-	d3d.GetFX().SetupSpotLight(2, true, mModels[Modelid::BOX].GetPosition(), dir, Vector3(0.05f, 0.2f, 0.05f), Vector3(0.01f, 0.01f, 0.01f), Vector3(0.01f, 0.01f, 0.01f));
+	d3d.GetFX().SetupSpotLight(2, true, mGameObjects[GameObjectId::BOX].GetPosition(), dir, Vector3(0.05f, 0.2f, 0.05f), Vector3(0.01f, 0.01f, 0.01f), Vector3(0.01f, 0.01f, 0.01f));
 	float d = sinf(mAngle) * 0.5f + 0.5f;
-	mModels[Modelid::BOX].HasOverrideMat()->SetBlendFactors(d, d, d, 1);
+	mGameObjects[GameObjectId::BOX].HasOverrideMat()->SetBlendFactors(d, d, d, 1);
 
-	//render all models
-	for (auto& mod : mModels)
+	//render all GameObjects
+	for (auto& mod : mGameObjects)
 		d3d.GetFX().Render(mod);
 
 	d3d.EndRender();

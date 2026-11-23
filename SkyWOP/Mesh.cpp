@@ -133,7 +133,7 @@ void Mesh::CreateFrom(const std::string& fileName, MyD3D& d3d)
 		0
 	);
 
-	if (scene == NULL) // If there is no valid scene it might be using the old model format
+	if (scene == NULL) // If there is no valid scene it might be using the old GameObject format
 	{
 		DBOUT("Couldn't load " << fileName);
 		assert(false);

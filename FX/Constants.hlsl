@@ -14,7 +14,7 @@ cbuffer cbPerFrame : register(b0)
 	float4 gEyePosW;			//ignore w, it's the camera position//ignore w
 };
 
-//things that change every time we render a model (object) - the matrices
+//things that change every time we render a GameObject (object) - the matrices
 cbuffer cbPerObject : register(b1)
 {
 	float4x4 gWorld;

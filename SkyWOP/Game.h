@@ -6,11 +6,11 @@
 #include "SpriteFont.h"
 
 #include "Mesh.h"
-#include "Model.h"
+#include "GameObject.h"
 #include "singleton.h"
 
 /*
-Display a small scene and spin some models around
+Display a small scene and spin some GameObjects around
 */
 class Game : public Singleton<Game>
 {
@@ -30,19 +30,19 @@ public:
 	const DirectX::SimpleMath::Vector3 mDefCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
 	DirectX::SimpleMath::Vector3 mCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
 
-	//stick all models in a vector and use an enum to index them
-	std::vector<Model> mModels;
-	enum Modelid { FLOOR, BACK_WALL, LEFT_WALL, BOX, CROSS, CROSS2, WINDOW, WINDOW2, TOTAL=8 }; 
+	//stick all GameObjects in a vector and use an enum to index them
+	std::vector<GameObject> mGameObjects;
+	enum GameObjectId { FLOOR, BACK_WALL, LEFT_WALL, BOX, CROSS, CROSS2, WINDOW, WINDOW2, TOTAL = 8 };
 
 private:
 
-	//spin some models around
+	//spin some GameObjects around
 	float mAngle = 0;
 	//printing text
-	DirectX::SpriteBatch *mpFontBatch = nullptr;
-	DirectX::SpriteFont *mpFont = nullptr;
+	DirectX::SpriteBatch* mpFontBatch = nullptr;
+	DirectX::SpriteFont* mpFont = nullptr;
 
-	//load all models
+	//load all GameObjects
 	void Load();
 	//separate out in-game rendering
 	void RenderGame(float dTime);

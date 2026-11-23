@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef GameObject_H
+#define GameObject_H
 
 #include <string>
 #include <cassert>
@@ -9,9 +9,9 @@
 class Mesh;
 
 /*
-* A model is a rendered instance of a mesh, which is geometry
+* A gameobject is a rendered instance of a mesh, which is geometry
 */
-class Model
+class GameObject
 {
 public:
 	//go find the mesh with this name and setup
@@ -26,18 +26,18 @@ public:
 	//build a matrix from the euler angles, pos and scale
 	//note that this hard codes a concatenation order that you might not want
 	void GetWorldMatrix(DirectX::SimpleMath::Matrix& w);
-	//get the mesh this model is using
+	//get the mesh this GameObject is using
 	Mesh& GetMesh() {
 		assert(mpMesh);
 		return *mpMesh;
 	}
-	//has this model been configured to use a custom material
+	//has this GameObject been configured to use a custom material
 	Material* HasOverrideMat() {
 		if (mUseOverrideMat)
 			return &mOverrideMaterial;
 		return nullptr;
 	}
-	//tell the model to use a custom material (take a copy of it) or stop using one
+	//tell the GameObject to use a custom material (take a copy of it) or stop using one
 	void SetOverrideMat(Material* pMat = nullptr) {
 		if (!pMat) {
 			mUseOverrideMat = false;
@@ -46,13 +46,13 @@ public:
 		mUseOverrideMat = true;
 		mOverrideMaterial = *pMat;
 	}
-	//copy a model
-	Model& operator=(const Model& m)
+	//copy a GameObject
+	GameObject& operator=(const GameObject& gameObject)
 	{
-		mpMesh = m.mpMesh;
-		mPosition = m.mPosition;
-		mScale = m.mScale;
-		mRotation = m.mRotation;
+		mpMesh = gameObject.mpMesh;
+		mPosition = gameObject.mPosition;
+		mScale = gameObject.mScale;
+		mRotation = gameObject.mRotation;
 		return *this;
 	}
 private:

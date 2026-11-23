@@ -5,7 +5,7 @@
 #include "D3DUtil.h"
 #include "FX.h"
 #include "WindowUtils.h"
-#include "Model.h"
+#include "GameObject.h"
 
 namespace FX
 {
@@ -354,16 +354,16 @@ namespace FX
 			ReleaseCOM(mpRasterStates[i]);
 	}
 
-	void MyFX::Render(Model& model, Material* pOverrideMat)
+	void MyFX::Render(GameObject& gameObject, Material* pOverrideMat)
 	{
 		//setup shaders
 		mD3D.GetDeviceCtx().VSSetShader(mpVS, nullptr, 0);
 
 		DirectX::SimpleMath::Matrix w;
-		model.GetWorldMatrix(w);
+		gameObject.GetWorldMatrix(w);
 		SetPerObjConsts(mD3D.GetDeviceCtx(), w);
 
-		Mesh& mesh = model.GetMesh();
+		Mesh& mesh = gameObject.GetMesh();
 		for (int i = 0; i < mesh.GetNumSubMeshes(); ++i)
 		{
 			//update material
@@ -373,8 +373,8 @@ namespace FX
 			Material* pM;
 			if (pOverrideMat)
 				pM = pOverrideMat;
-			else if (model.HasOverrideMat())
-				pM = model.HasOverrideMat();
+			else if (gameObject.HasOverrideMat())
+				pM = gameObject.HasOverrideMat();
 			else
 				pM = &sm.material;
 

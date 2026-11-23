@@ -7,9 +7,9 @@
 
 float MyD3D::GetAspectRatio()
 {
-	int w, h;
-	WinUtil::Get().GetClientExtents(w, h);
-	return w / (float)h;
+	int width, height;
+	WinUtil::Get().GetClientExtents(width, height);
+	return width / (float)height;
 }
 
 void MyD3D::BeginRender(const DirectX::SimpleMath::Vector4& colour)
@@ -260,10 +260,10 @@ bool MyD3D::InitDirect3D()
 
 	CheckMultiSamplingSupport(m4xMsaaQuality);
 
-	int w, h;
-	WinUtil::Get().GetClientExtents(w, h);
+	int width, height;
+	WinUtil::Get().GetClientExtents(width, height);
 	DXGI_SWAP_CHAIN_DESC sd;
-	CreateSwapChainDescription(sd, WinUtil::Get().GetMainWnd(), true, w, h);
+	CreateSwapChainDescription(sd, WinUtil::Get().GetMainWnd(), true, width, height);
 	CreateSwapChain(sd);
 
 
@@ -271,7 +271,7 @@ bool MyD3D::InitDirect3D()
 	// also need to be executed every time the window is resized.  So
 	// just call the OnResize method here to avoid code duplication.
 
-	OnResize(w, h, *this);
+	OnResize(width, height, *this);
 
 	CreateWrapSampler(mpWrapSampler);
 

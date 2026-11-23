@@ -19,7 +19,7 @@ material (colour and texture).
 class SubMesh
 {
 public:
-	~SubMesh() { 
+	~SubMesh() {
 		Release();
 	}
 	void Release();
@@ -46,8 +46,8 @@ class Mesh
 {
 public:
 	Mesh(const std::string& name) : mName(name) {}
-	~Mesh() { 
-		Release(); 
+	~Mesh() {
+		Release();
 	}
 	void Release();
 	/*
@@ -65,7 +65,7 @@ public:
 	* should work with most common file formats
 	*/
 	void CreateFrom(const std::string& fileName, MyD3D& d3d);
-	
+
 	//getters
 	int GetNumSubMeshes() const {
 		return (int)mSubMeshes.size();
@@ -79,8 +79,8 @@ public:
 
 
 private:
-	Mesh(const Mesh& m) = delete;
-	Mesh& operator=(const Mesh& m) = delete;
+	Mesh(const Mesh& mesh) = delete;
+	Mesh& operator=(const Mesh& mesh) = delete;
 	//a mesh can contain multiple surfaces (geometry), each surface having 
 	//potentially different material properties
 	std::vector<SubMesh*> mSubMeshes;
@@ -94,8 +94,8 @@ orientations, positions.
 class MeshMgr
 {
 public:
-	~MeshMgr() { 
-		Release(); 
+	~MeshMgr() {
+		Release();
 	}
 	void Release();
 	//look up a mesh by name

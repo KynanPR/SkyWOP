@@ -61,9 +61,9 @@ void CreateIndexBuffer(ID3D11Device& d3dDevice, UINT bufferSize, const void* pSo
 }
 
 
-DirectX::SimpleMath::Matrix InverseTranspose(const DirectX::SimpleMath::Matrix& m)
+DirectX::SimpleMath::Matrix InverseTranspose(const DirectX::SimpleMath::Matrix& matrix)
 {
-	DirectX::XMMATRIX A = m;
+	DirectX::XMMATRIX A = matrix;
 	A.r[3] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	DirectX::XMVECTOR det = XMMatrixDeterminant(A);
 	return XMMatrixTranspose(XMMatrixInverse(&det, A));

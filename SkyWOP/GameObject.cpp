@@ -1,9 +1,9 @@
 #include "FX.h"
-#include "Model.h"
+#include "Gameobject.h"
 #include "WindowUtils.h"
 #include "Mesh.h"
 
-void Model::Initialise(const std::string& meshFileName)
+void GameObject::Initialise(const std::string& meshFileName)
 {
 	MyD3D& d3d = WinUtil::Get().GetD3D();
 
@@ -11,7 +11,7 @@ void Model::Initialise(const std::string& meshFileName)
 
 
 
-void Model::Initialise(Mesh& mesh)
+void GameObject::Initialise(Mesh& mesh)
 {
 	using namespace DirectX::SimpleMath;
 	mpMesh = &mesh;
@@ -20,7 +20,7 @@ void Model::Initialise(Mesh& mesh)
 	mRotation = Vector3(0, 0, 0);
 }
 
-void Model::GetWorldMatrix(DirectX::SimpleMath::Matrix& w)
+void GameObject::GetWorldMatrix(DirectX::SimpleMath::Matrix& w)
 {
 	using namespace DirectX::SimpleMath;
 	w = Matrix::CreateScale(mScale) * Matrix::CreateRotationX(mRotation.x) *

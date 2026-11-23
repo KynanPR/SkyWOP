@@ -51,11 +51,11 @@ Just saves typing and so stops silly bugs.
 inline void DXError(HRESULT hr, const char* pFileStr, int lineNum)
 {
 	LPSTR output;
-	FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER| FORMAT_MESSAGE_IGNORE_INSERTS,	NULL, hr, MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),	(LPTSTR) &output,	0,	NULL);																							
-	static char sErrBuffer[256];																		
-	sprintf_s(sErrBuffer,256,"FILE:%s \rLINE:%i \rERROR:%s", pFileStr, lineNum, output);						
-	MessageBox(0, sErrBuffer, "Error", 0);																
-	assert(false);																						
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&output, 0, NULL);
+	static char sErrBuffer[256];
+	sprintf_s(sErrBuffer, 256, "FILE:%s \rLINE:%i \rERROR:%s", pFileStr, lineNum, output);
+	MessageBox(0, sErrBuffer, "Error", 0);
+	assert(false);
 }
 #define HR(x)                                              \
 {                                                          \
@@ -115,7 +115,7 @@ const float VERY_SMALL = 0.0001f;
 
 inline bool Equals(float a, float b)
 {
-	return (fabs(a-b) < VERY_SMALL) ? true : false;
+	return (fabs(a - b) < VERY_SMALL) ? true : false;
 }
 
 //knowing the time always comes in handy
@@ -130,13 +130,13 @@ void CreateProjectionMatrix(DirectX::SimpleMath::Matrix& projM, float fieldOfVie
 void CreateViewMatrix(DirectX::SimpleMath::Matrix& viewM, const DirectX::SimpleMath::Vector3& camPos, const DirectX::SimpleMath::Vector3& camTgt, const DirectX::SimpleMath::Vector3& camUp);
 
 //create a vertex buffer to store geometry
-void CreateVertexBuffer(ID3D11Device& d3dDevice, UINT bufferSize, const void *pSourceData, ID3D11Buffer* &pVB);
+void CreateVertexBuffer(ID3D11Device& d3dDevice, UINT bufferSize, const void* pSourceData, ID3D11Buffer*& pVB);
 
 //create an index buffer to index into a vertex buffer
-void CreateIndexBuffer(ID3D11Device& d3dDevice, UINT bufferSize, const void *pSourceData, ID3D11Buffer* &pIB);
+void CreateIndexBuffer(ID3D11Device& d3dDevice, UINT bufferSize, const void* pSourceData, ID3D11Buffer*& pIB);
 
 //I want to reverse a transformation
-DirectX::SimpleMath::Matrix InverseTranspose(const DirectX::SimpleMath::Matrix& m);
+DirectX::SimpleMath::Matrix InverseTranspose(const DirectX::SimpleMath::Matrix& matrix);
 
 //get a random range min-max inclusive, either floats or ints
 float GetRandom(float min, float max);

@@ -2,7 +2,7 @@
 #define GEOMETRYBUILDER_H
 
 class MeshMgr;
-class Model;
+class GameObject;
 class Mesh;
 
 /*

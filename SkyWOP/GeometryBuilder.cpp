@@ -2,7 +2,7 @@
 #include "ShaderTypes.h"
 #include "GeometryBuilder.h"
 #include "Mesh.h"
-#include "Model.h"
+#include "GameObject.h"
 #include "D3DUtil.h"
 
 Mesh& BuildQuad(MeshMgr& mgr)
