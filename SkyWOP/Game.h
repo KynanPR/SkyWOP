@@ -30,9 +30,8 @@ public:
 	const DirectX::SimpleMath::Vector3 mDefCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
 	DirectX::SimpleMath::Vector3 mCamPos = DirectX::SimpleMath::Vector3(0, 2, -5);
 
-	//stick all GameObjects in a vector and use an enum to index them
+	//stick all GameObjects in a vector
 	std::vector<GameObject> mGameObjects;
-	enum GameObjectId { FLOOR, BACK_WALL, LEFT_WALL, BOX, CROSS, CROSS2, WINDOW, WINDOW2, TOTAL = 8 };
 
 private:
 

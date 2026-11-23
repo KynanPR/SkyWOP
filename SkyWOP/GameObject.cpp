@@ -20,10 +20,10 @@ void GameObject::Initialise(Mesh& mesh)
 	mRotation = Vector3(0, 0, 0);
 }
 
-void GameObject::GetWorldMatrix(DirectX::SimpleMath::Matrix& w)
+void GameObject::GetWorldMatrix(DirectX::SimpleMath::Matrix& worldMatrix)
 {
 	using namespace DirectX::SimpleMath;
-	w = Matrix::CreateScale(mScale) * Matrix::CreateRotationX(mRotation.x) *
+	worldMatrix = Matrix::CreateScale(mScale) * Matrix::CreateRotationX(mRotation.x) *
 		Matrix::CreateRotationY(mRotation.y) * Matrix::CreateRotationZ(mRotation.z) *
 		Matrix::CreateTranslation(mPosition);
 }

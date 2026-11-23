@@ -359,9 +359,9 @@ namespace FX
 		//setup shaders
 		mD3D.GetDeviceCtx().VSSetShader(mpVS, nullptr, 0);
 
-		DirectX::SimpleMath::Matrix w;
-		gameObject.GetWorldMatrix(w);
-		SetPerObjConsts(mD3D.GetDeviceCtx(), w);
+		DirectX::SimpleMath::Matrix worldMatrix;
+		gameObject.GetWorldMatrix(worldMatrix);
+		SetPerObjConsts(mD3D.GetDeviceCtx(), worldMatrix);
 
 		Mesh& mesh = gameObject.GetMesh();
 		for (int i = 0; i < mesh.GetNumSubMeshes(); ++i)
@@ -370,16 +370,16 @@ namespace FX
 			SubMesh& sm = mesh.GetSubMesh(i);
 
 			mD3D.InitInputAssembler(mpInputLayout, sm.mpVB, sizeof(VertexPosNormTex), sm.mpIB);
-			Material* pM;
+			Material* pMat;
 			if (pOverrideMat)
-				pM = pOverrideMat;
+				pMat = pOverrideMat;
 			else if (gameObject.HasOverrideMat())
-				pM = gameObject.HasOverrideMat();
+				pMat = gameObject.HasOverrideMat();
 			else
-				pM = &sm.material;
+				pMat = &sm.material;
 
 
-			PreRenderObj(*pM);
+			PreRenderObj(*pMat);
 			mD3D.GetDeviceCtx().DrawIndexed(sm.mNumIndices, 0, 0);
 
 		}
