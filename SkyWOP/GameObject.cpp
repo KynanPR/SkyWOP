@@ -140,3 +140,15 @@ void GameObject::SetOverrideMat(const Material& newOverrideMat, const bool useOv
 	mUseOverrideMat = useOverrideMat;
 }
 
+void GameObject::SetParent(const GameObject& newParent)
+{
+	mpParent = &newParent;
+	mHasParent = true;
+}
+
+void GameObject::ClearParent()
+{
+	mpParent = nullptr;
+	mHasParent = false;
+}
+

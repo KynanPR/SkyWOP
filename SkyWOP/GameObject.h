@@ -94,6 +94,12 @@ public:
 
 	// Get's the override material on GameObject. Errors if no override set
 	const Material& GetOverrideMat() const;
+
+	/// <summary>
+	/// Get this GameObject's parent GameObject
+	/// </summary>
+	/// <returns>Reference to parent or nullptr if there is no parent</returns>
+	const GameObject& GetParent() const;
 	
 
 	
@@ -125,6 +131,17 @@ public:
 	void SetUseOverrideMat(bool newUseState);
 
 	void SetOverrideMat(const Material& newOverrideMat, const bool useOverrideMat = true);
+
+	/// <summary>
+	/// Sets the parent of this GameObject
+	/// </summary>
+	/// <param name="newParent">Reference to parent GameObject</param>
+	void SetParent(const GameObject& newParent);
+
+	/// <summary>
+	/// Removes this GameObject's parent. Doesn't adjust relative position, scale, etc.
+	/// </summary>
+	void ClearParent();
 
 /// Private Methods ///
 private:
