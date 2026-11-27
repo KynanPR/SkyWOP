@@ -2,70 +2,40 @@
 #include "D3D.h"
 #include "Game.h"
 #include "GeometryBuilder.h"
+#include "Player.hpp"
 
 /*quick way to configure a GameObject
 * gameObject - IN/OUT GameObject
 * source - IN mesh to use
 * scale/pos/rot - IN
 */
-void Setup(GameObject& gameObject, Mesh& source, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
-{
-	gameObject.Initialise(source);
-	gameObject.SetScale(scale);
-	gameObject.SetPosition(pos);
-	gameObject.SetRotation(rot);
-}
-
-//same as above, but most of the time we want a uniform scale
-void Setup(GameObject& gameObject, Mesh& source, float scale, const DirectX::SimpleMath::Vector3& pos, const DirectX::SimpleMath::Vector3& rot)
-{
-	Setup(gameObject, source, DirectX::SimpleMath::Vector3(scale, scale, scale), pos, rot);
-}
-
 
 void Game::Load()
 {
 	using namespace DirectX::SimpleMath;
 	MyD3D& d3d = WinUtil::Get().GetD3D();
 
-	//create an array of TOTAL GameObjects
-	GameObject gameObject;
-	mGameObjects.insert(mGameObjects.begin(), 3, gameObject);
 	//get a quad and cube mesh ready
 	Mesh& quadMesh = BuildQuad(d3d.GetMeshMgr());
 	Mesh& cubeMesh = BuildCube(d3d.GetMeshMgr());
 
-	// Player Test Load
-	//mGameObjects[GameObjectId::BOX].Initialise(cubeMesh);
-	//mGameObjects[GameObjectId::BOX].GetPosition() = Vector3(0, -0.5f, 1);
-	//mGameObjects[GameObjectId::BOX].GetScale() = Vector3(0.5f, 0.5f, 0.5f);
-	//Material mat = mGameObjects[3].GetMesh().GetSubMesh(0).material;
-	//mat.gfxData.Set(Vector4(0.5, 0.5, 0.5, 1), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
-	//mat.texture = "tiles.dds";
-	//mGameObjects[GameObjectId::BOX].SetOverrideMat(&mat);
+	// Player Load. Ensure player is at first
+	mGameObjects.emplace(mGameObjects.begin(), Player());
 
-	//textured lit box
-	mGameObjects[0].Initialise(cubeMesh);
-	mGameObjects[0].SetPosition(Vector3(0, -0.5f, 1));
-	mGameObjects[0].SetScale(Vector3(0.5f, 0.5f, 0.5f));
-	Material mat = mGameObjects[0].GetMesh().GetSubMesh(0).material;
-	mat.gfxData.Set(Vector4(0.5, 0.5, 0.5, 1), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
-	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "test.dds");
-	mat.texture = "tiles.dds";
-	mGameObjects[0].SetOverrideMat(mat);
-
-
+	// Setup some test walls for spacial reference
 	//back wall
-	Setup(mGameObjects[1], quadMesh, Vector3(3, 1, 1.5f), Vector3(0, 0.5f, 3), Vector3(-PI / 2, 0, 0));
-	mat = mGameObjects[1].GetMesh().GetSubMesh(0).material;
+	GameObject& backWall = mGameObjects.emplace_back();
+	backWall.SetUp(quadMesh, Vector3(0, 0.5f, 3), Vector3(3, 1, 1.5f), Vector3(-PI / 2, 0, 0));
+	Material mat = backWall.GetMesh().GetSubMesh(0).material;
 	mat.gfxData.Set(Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 0), Vector4(1, 1, 1, 1));
 	mat.pTextureRV = d3d.GetCache().LoadTexture(&d3d.GetDevice(), "wall.dds");
 	mat.texture = "wall.dds";
-	mGameObjects[1].SetOverrideMat(mat);
+	backWall.SetOverrideMat(mat);
 
 	//left wall
-	Setup(mGameObjects[2], quadMesh, Vector3(3, 1, 1.5f), Vector3(-2, 0.5f, 0), Vector3(-PI / 2, -PI / 2, 0));
-	mGameObjects[2].SetOverrideMat(mat);
+	GameObject& leftWall = mGameObjects.emplace_back();
+	leftWall.SetUp(quadMesh, Vector3(-2, 0.5f, 0), Vector3(3, 1, 1.5f), Vector3(-PI / 2, -PI / 2, 0));
+	leftWall.SetOverrideMat(mat);
 
 	//the sun
 	d3d.GetFX().SetupDirectionalLight(0, true, Vector3(-0.7f, -0.7f, 0.7f), Vector3(0.47f, 0.47f, 0.47f), Vector3(0.15f, 0.15f, 0.15f), Vector3(0.25f, 0.25f, 0.25f));

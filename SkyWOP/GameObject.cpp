@@ -11,13 +11,39 @@ void GameObject::Initialise(const std::string& meshFileName)
 
 
 
-void GameObject::Initialise(Mesh& mesh)
+void GameObject::SetUp(const std::string& meshFileName, const DirectX::SimpleMath::Vector3& position, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& rotation)
+{
+	Initialise(meshFileName);
+	SetPosition(position);
+	SetScale(scale);
+	SetRotation(rotation);
+}
+
+void GameObject::SetUp(const std::string& meshFileName, const DirectX::SimpleMath::Vector3 position, const float scale, const DirectX::SimpleMath::Vector3& rotation)
+{
+	SetUp(meshFileName, position, DirectX::SimpleMath::Vector3(scale, scale, scale), rotation);
+}
+
+void GameObject::Initialise(const Mesh& mesh)
 {
 	using namespace DirectX::SimpleMath;
 	mpMesh = &mesh;
 	mPosition = Vector3(0, 0, 0);
 	mScale = Vector3(1, 1, 1);
 	mRotation = Vector3(0, 0, 0);
+}
+
+void GameObject::SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& position, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& rotation)
+{
+	Initialise(mesh);
+	SetPosition(position);
+	SetScale(scale);
+	SetRotation(rotation);
+}
+
+void GameObject::SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& position, const float scale, const DirectX::SimpleMath::Vector3& rotation)
+{
+	SetUp(mesh, position, DirectX::SimpleMath::Vector3(scale, scale, scale), rotation);
 }
 
 const Mesh& GameObject::GetMesh() const

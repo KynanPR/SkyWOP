@@ -27,9 +27,17 @@ public:
 	
 	//go find the mesh with this name and setup
 	void Initialise(const std::string& meshFileName);
+	// Init and set position, rotation and scale
+	void SetUp(const std::string& meshFileName, const DirectX::SimpleMath::Vector3& position, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& rotation);
+	// Set up with constant scale
+	void SetUp(const std::string& meshFileName, const DirectX::SimpleMath::Vector3 position, const float scale, const DirectX::SimpleMath::Vector3& rotation);
 
 	//setup using the given mesh
-	void Initialise(Mesh& mesh);
+	void Initialise(const Mesh& mesh);
+	// Init and set position, rotation and scale
+	void SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& position, const DirectX::SimpleMath::Vector3& scale, const DirectX::SimpleMath::Vector3& rotation);
+	// Set up with constant scale
+	void SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& position, const float scale, const DirectX::SimpleMath::Vector3& rotation);
 
 	// Getters
 	const DirectX::SimpleMath::Vector3& GetPosition() const { return mPosition; }
@@ -61,6 +69,7 @@ public:
 	/// <param name="useOverrideMat">Whether this new material should be used. Default true</param>
 	void SetUseOverrideMat(bool newUseState);
 	void SetOverrideMat(const Material& newOverrideMat, const bool useOverrideMat = true);
+
 private:
 	/// Private Methods ///
 
@@ -71,7 +80,7 @@ public:
 private:
 	/// Private Data ///
 
-	Mesh* mpMesh = nullptr;		//the mesh we are using
+	const Mesh* mpMesh = nullptr;		//the mesh we are using
 	DirectX::SimpleMath::Vector3 mPosition, mScale, mRotation;	//positon, scale and orientation
 	bool mhasOverrideMaterial = false; // flag for whether we have a non-default override material
 	Material mOverrideMaterial;		//an alternate material to the one in the Mesh

@@ -12,7 +12,8 @@ class Mesh;
 
 Mesh& BuildQuad(MeshMgr& mgr);
 Mesh& BuildPyramid(MeshMgr& mgr);
-Mesh& BuildCube(MeshMgr& mgr);
+Mesh& BuildCube(MeshMgr& mgr, std::string meshName = "box");
+Mesh& BuildPlayerCube(MeshMgr& mgr);
 Mesh& BuildSphere(MeshMgr& mgr, int LatLines, int LongLines);
 
 #endif

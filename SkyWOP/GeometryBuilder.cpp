@@ -85,7 +85,7 @@ Mesh& BuildPyramid(MeshMgr& mgr)
 }
 
 
-Mesh& BuildCube(MeshMgr& mgr)
+Mesh& BuildCube(MeshMgr& mgr, std::string meshName/* = "box" */)
 {
 	using namespace DirectX::SimpleMath;
 	// Create vertex buffer
@@ -144,7 +144,7 @@ Mesh& BuildCube(MeshMgr& mgr)
 		20, 22, 23
 	};
 
-	Mesh& mesh = mgr.CreateMesh("box");
+	Mesh& mesh = mgr.CreateMesh(meshName);
 	Material mat = Material::default;
 	mat.gfxData.Diffuse = Vector4(1, 1, 1, 1);
 	mat.gfxData.Ambient = Vector4(0.1f, 0.1f, 0.1f, 1);
@@ -153,6 +153,11 @@ Mesh& BuildCube(MeshMgr& mgr)
 	return mesh;
 }
 
+
+Mesh& BuildPlayerCube(MeshMgr& mgr)
+{
+	return BuildCube(mgr, "PlayerCube");
+}
 
 Mesh& BuildSphere(MeshMgr& mgr, int LatLines, int LongLines)
 {
