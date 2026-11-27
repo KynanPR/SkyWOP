@@ -20,11 +20,51 @@ void GameObject::Initialise(Mesh& mesh)
 	mRotation = Vector3(0, 0, 0);
 }
 
-void GameObject::GetWorldMatrix(DirectX::SimpleMath::Matrix& worldMatrix)
+const Mesh& GameObject::GetMesh() const
+{
+	assert(mpMesh);
+	return *mpMesh;
+}
+
+DirectX::SimpleMath::Matrix GameObject::GetWorldMatrix() const
 {
 	using namespace DirectX::SimpleMath;
-	worldMatrix = Matrix::CreateScale(mScale) * Matrix::CreateRotationX(mRotation.x) *
-		Matrix::CreateRotationY(mRotation.y) * Matrix::CreateRotationZ(mRotation.z) *
-		Matrix::CreateTranslation(mPosition);
+	Matrix worldMatrix = 
+		Matrix::CreateScale(mScale)
+		* Matrix::CreateRotationX(mRotation.x)
+		* Matrix::CreateRotationY(mRotation.y)
+		* Matrix::CreateRotationZ(mRotation.z)
+		* Matrix::CreateTranslation(mPosition);
+	return worldMatrix;
+}
+
+
+
+const Material& GameObject::GetOverrideMat() const
+{
+
+	return mOverrideMaterial;
+}
+
+
+void GameObject::SetWorldMatrix(const DirectX::SimpleMath::Vector3& newPosition, const DirectX::SimpleMath::Vector3& newScale, const DirectX::SimpleMath::Vector3& newRotation)
+{
+	SetPosition(newPosition);
+	SetScale(newScale);
+	SetRotation(newRotation);
+}
+
+void GameObject::SetUseOverrideMat(bool newUseState)
+{
+	assert(mhasOverrideMaterial);
+	mUseOverrideMat = newUseState;
+	
+}
+
+void GameObject::SetOverrideMat(const Material& newOverrideMat, const bool useOverrideMat)
+{
+	mOverrideMaterial = newOverrideMat;
+	mhasOverrideMaterial = true;
+	mUseOverrideMat = useOverrideMat;
 }
 

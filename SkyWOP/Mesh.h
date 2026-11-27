@@ -70,7 +70,7 @@ public:
 	int GetNumSubMeshes() const {
 		return (int)mSubMeshes.size();
 	}
-	SubMesh& GetSubMesh(int idx) {
+	const SubMesh& GetSubMesh(int idx) const {
 		return *mSubMeshes.at(idx);
 	}
 

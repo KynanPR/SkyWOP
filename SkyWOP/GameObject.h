@@ -14,39 +14,8 @@ class Mesh;
 class GameObject
 {
 public:
-	//go find the mesh with this name and setup
-	void Initialise(const std::string& meshFileName);
-	//setup using the given mesh
-	void Initialise(Mesh& mesh);
-
-	//get and optionally set pos/scale/rotation
-	DirectX::SimpleMath::Vector3& GetPosition() { return mPosition; }
-	DirectX::SimpleMath::Vector3& GetScale() { return mScale; }
-	DirectX::SimpleMath::Vector3& GetRotation() { return mRotation; }
-	//build a matrix from the euler angles, pos and scale
-	//note that this hard codes a concatenation order that you might not want
-	void GetWorldMatrix(DirectX::SimpleMath::Matrix& w);
-	//get the mesh this GameObject is using
-	Mesh& GetMesh() {
-		assert(mpMesh);
-		return *mpMesh;
-	}
-	//has this GameObject been configured to use a custom material
-	Material* HasOverrideMat() {
-		if (mUseOverrideMat)
-			return &mOverrideMaterial;
-		return nullptr;
-	}
-	//tell the GameObject to use a custom material (take a copy of it) or stop using one
-	void SetOverrideMat(Material* pMat = nullptr) {
-		if (!pMat) {
-			mUseOverrideMat = false;
-			return;
-		}
-		mUseOverrideMat = true;
-		mOverrideMaterial = *pMat;
-	}
-	//copy a GameObject
+	/// Public Methods ///
+	// Copy a GameObject
 	GameObject& operator=(const GameObject& gameObject)
 	{
 		mpMesh = gameObject.mpMesh;
@@ -55,10 +24,56 @@ public:
 		mRotation = gameObject.mRotation;
 		return *this;
 	}
+	
+	//go find the mesh with this name and setup
+	void Initialise(const std::string& meshFileName);
+
+	//setup using the given mesh
+	void Initialise(Mesh& mesh);
+
+	// Getters
+	const DirectX::SimpleMath::Vector3& GetPosition() const { return mPosition; }
+	const DirectX::SimpleMath::Vector3& GetScale() const { return mScale; }
+	const DirectX::SimpleMath::Vector3& GetRotation() const { return mRotation; }
+	//get the mesh this GameObject is using
+	const Mesh& GetMesh() const;
+	//build a matrix from the euler angles, pos and scale
+	//note that this hard codes a concatenation order that you might not want
+	DirectX::SimpleMath::Matrix GetWorldMatrix() const;
+	// Get's whether the override material should be used
+	const bool GetUseOverrideMat() const { return mUseOverrideMat; }
+	// Get's the override material on GameObject. Errors if no override set
+	const Material& GetOverrideMat() const;
+
+	
+	// Setters
+	void SetPosition(const DirectX::SimpleMath::Vector3& newPosition) { mPosition = newPosition; }
+	void SetScale(const DirectX::SimpleMath::Vector3& newScale) { mScale = newScale; }
+	void SetRotation(const DirectX::SimpleMath::Vector3& newRotation) { mRotation = newRotation; }
+	/// <summary>
+	/// Set the world matrix with individual position, scale and rotation values
+	/// </summary>
+	void SetWorldMatrix(const DirectX::SimpleMath::Vector3& newPosition, const DirectX::SimpleMath::Vector3& newScale, const DirectX::SimpleMath::Vector3& newRotation);
+	/// <summary>
+	/// Sets whether the override material should be used. Errors if setting to true with no override material set
+	/// </summary>
+	/// <param name="newOverrideMat">Reference to the new override material</param>
+	/// <param name="useOverrideMat">Whether this new material should be used. Default true</param>
+	void SetUseOverrideMat(bool newUseState);
+	void SetOverrideMat(const Material& newOverrideMat, const bool useOverrideMat = true);
 private:
+	/// Private Methods ///
+
+
+public:
+	/// Public Data ///
+
+private:
+	/// Private Data ///
 
 	Mesh* mpMesh = nullptr;		//the mesh we are using
 	DirectX::SimpleMath::Vector3 mPosition, mScale, mRotation;	//positon, scale and orientation
+	bool mhasOverrideMaterial = false; // flag for whether we have a non-default override material
 	Material mOverrideMaterial;		//an alternate material to the one in the Mesh
 	bool mUseOverrideMat = false;	//should we actually be using it?
 };

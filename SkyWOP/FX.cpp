@@ -359,34 +359,27 @@ namespace FX
 		//setup shaders
 		mD3D.GetDeviceCtx().VSSetShader(mpVS, nullptr, 0);
 
-		DirectX::SimpleMath::Matrix worldMatrix;
-		gameObject.GetWorldMatrix(worldMatrix);
+		DirectX::SimpleMath::Matrix worldMatrix = gameObject.GetWorldMatrix();
 		SetPerObjConsts(mD3D.GetDeviceCtx(), worldMatrix);
 
-		Mesh& mesh = gameObject.GetMesh();
+		const Mesh& mesh = gameObject.GetMesh();
 		for (int i = 0; i < mesh.GetNumSubMeshes(); ++i)
 		{
 			//update material
-			SubMesh& sm = mesh.GetSubMesh(i);
+			const SubMesh& sm = mesh.GetSubMesh(i);
 
 			mD3D.InitInputAssembler(mpInputLayout, sm.mpVB, sizeof(VertexPosNormTex), sm.mpIB);
-			Material* pMat;
-			if (pOverrideMat)
-				pMat = pOverrideMat;
-			else if (gameObject.HasOverrideMat())
-				pMat = gameObject.HasOverrideMat();
-			else
-				pMat = &sm.material;
+			// Set the render material according to priority heierachy. Render specific mat > GameObject override mat > submesh material
+			const Material& pMat =  pOverrideMat || gameObject.GetUseOverrideMat() ? gameObject.GetOverrideMat() : sm.material;
 
-
-			PreRenderObj(*pMat);
+			PreRenderObj(pMat);
 			mD3D.GetDeviceCtx().DrawIndexed(sm.mNumIndices, 0, 0);
 
 		}
 		mD3D.GetDeviceCtx().OMSetBlendState(0, 0, 0xffffffff);
 	}
 
-	void MyFX::PreRenderObj(Material& mat)
+	void MyFX::PreRenderObj(const Material& mat)
 	{
 		//texture transform
 		mGfxPerMesh.material = mat.gfxData;

@@ -148,7 +148,7 @@ namespace FX
 		void CreateConstantBuffers();
 		void ReleaseConstantBuffers();
 		//called before rendering anything	
-		void PreRenderObj(Material& mat);
+		void PreRenderObj(const Material& mat);
 		//mapping between vertex/index buffers and gpu
 		ID3D11InputLayout* mpInputLayout = nullptr;
 		//a smapler to read the texture
