@@ -13,8 +13,8 @@ class Mesh;
 */
 class GameObject
 {
+/// Public Methods ///
 public:
-	/// Public Methods ///
 	// Copy a GameObject
 	GameObject& operator=(const GameObject& gameObject)
 	{
@@ -40,46 +40,105 @@ public:
 	void SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& position, const float scale, const DirectX::SimpleMath::Vector3& rotation);
 
 	// Getters
-	const DirectX::SimpleMath::Vector3& GetPosition() const { return mPosition; }
-	const DirectX::SimpleMath::Vector3& GetScale() const { return mScale; }
-	const DirectX::SimpleMath::Vector3& GetRotation() const { return mRotation; }
+	
+	/// <summary>
+	/// Get global position of GameObject
+	/// </summary>
+	/// <returns>Position of GameObject factoring in position of parent</returns>
+	const DirectX::SimpleMath::Vector3 GetPositionGlobal() const;
+
+	/// <summary>
+	/// Get local position of GameObject
+	/// </summary>
+	/// <returns>Position of GameObject relative to its parent</returns>
+	const DirectX::SimpleMath::Vector3& GetPosition() const;
+
+	/// <summary>
+	/// Get global scale of GameObject
+	/// </summary>
+	/// <returns>Scale of GameObject factoring in scale of parent</returns>
+	const DirectX::SimpleMath::Vector3 GetScaleGlobal() const;
+
+	/// <summary>
+	/// Get local scale of GameObject
+	/// </summary>
+	/// <returns>Scale of GameObject relative to its parent</returns>
+	const DirectX::SimpleMath::Vector3& GetScale() const;
+
+	/// <summary>
+	/// Get global rotation of GameObject
+	/// </summary>
+	/// <returns>Rotation of GameObject factoring in rotation of parent</returns>
+	const DirectX::SimpleMath::Vector3 GetRotationGlobal() const;
+
+	/// <summary>
+	/// Get local rotation of GameObject
+	/// </summary>
+	/// <returns>Rotation of GameObject relative to its parent</returns>
+	const DirectX::SimpleMath::Vector3& GetRotation() const;
+
 	//get the mesh this GameObject is using
 	const Mesh& GetMesh() const;
+
 	//build a matrix from the euler angles, pos and scale
 	//note that this hard codes a concatenation order that you might not want
+	
+	/// <summary>
+	/// Build matrix from position, scale and rotation. Multiplication is in that order
+	/// </summary>
+	/// <returns>Global world matrix</returns>
 	DirectX::SimpleMath::Matrix GetWorldMatrix() const;
+
 	// Get's whether the override material should be used
 	const bool GetUseOverrideMat() const { return mUseOverrideMat; }
+
 	// Get's the override material on GameObject. Errors if no override set
 	const Material& GetOverrideMat() const;
+	
 
 	
 	// Setters
-	void SetPosition(const DirectX::SimpleMath::Vector3& newPosition) { mPosition = newPosition; }
-	void SetScale(const DirectX::SimpleMath::Vector3& newScale) { mScale = newScale; }
-	void SetRotation(const DirectX::SimpleMath::Vector3& newRotation) { mRotation = newRotation; }
+
 	/// <summary>
-	/// Set the world matrix with individual position, scale and rotation values
+	/// Set local position of GameObject
 	/// </summary>
-	void SetWorldMatrix(const DirectX::SimpleMath::Vector3& newPosition, const DirectX::SimpleMath::Vector3& newScale, const DirectX::SimpleMath::Vector3& newRotation);
+	/// <param name="newPosition">New position of GameObject relative to its parent</param>
+	void SetPosition(const DirectX::SimpleMath::Vector3& newPosition) { mPosition = newPosition; }
+
+	/// <summary>
+	/// Set local scale of GameObject
+	/// </summary>
+	/// <param name="newScale">New scale of GameObject relative to its parent</param>
+	void SetScale(const DirectX::SimpleMath::Vector3& newScale) { mScale = newScale; }
+
+	/// <summary>
+	/// Set local rotation of GameObject
+	/// </summary>
+	/// <param name="newRotation">New rotation of GameObject relative to its parent</param>
+	void SetRotation(const DirectX::SimpleMath::Vector3& newRotation) { mRotation = newRotation; }
+
 	/// <summary>
 	/// Sets whether the override material should be used. Errors if setting to true with no override material set
 	/// </summary>
 	/// <param name="newOverrideMat">Reference to the new override material</param>
 	/// <param name="useOverrideMat">Whether this new material should be used. Default true</param>
 	void SetUseOverrideMat(bool newUseState);
+
 	void SetOverrideMat(const Material& newOverrideMat, const bool useOverrideMat = true);
 
+/// Private Methods ///
 private:
-	/// Private Methods ///
 
-
+/// Public Data ///
 public:
-	/// Public Data ///
 
+/// Private Data ///
 private:
-	/// Private Data ///
-
+	/// <summary>
+	/// Parent GameObject. position, scale and rotation are relative to parent
+	/// </summary>
+	const GameObject* mpParent = nullptr;
+	bool mHasParent = false;
 	const Mesh* mpMesh = nullptr;		//the mesh we are using
 	DirectX::SimpleMath::Vector3 mPosition, mScale, mRotation;	//positon, scale and orientation
 	bool mhasOverrideMaterial = false; // flag for whether we have a non-default override material

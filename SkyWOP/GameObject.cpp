@@ -46,6 +46,60 @@ void GameObject::SetUp(const Mesh& mesh, const DirectX::SimpleMath::Vector3& pos
 	SetUp(mesh, position, DirectX::SimpleMath::Vector3(scale, scale, scale), rotation);
 }
 
+const DirectX::SimpleMath::Vector3 GameObject::GetPositionGlobal() const
+{
+	if (mHasParent) {
+		// mPosition is relative to parent
+		return mpParent->GetPositionGlobal() + mPosition;
+	}
+	else
+	{
+		// No parent, so mPosition is global position
+		return mPosition;
+	}
+}
+
+const DirectX::SimpleMath::Vector3& GameObject::GetPosition() const
+{
+	return mPosition;
+}
+
+const DirectX::SimpleMath::Vector3 GameObject::GetScaleGlobal() const
+{
+	if (mHasParent) {
+		// mScale is relative to parent
+		return mpParent->GetScaleGlobal() + mScale;
+	}
+	else
+	{
+		// No parent, so mScale is global scale
+		return mScale;
+	}
+}
+
+const DirectX::SimpleMath::Vector3& GameObject::GetScale() const
+{
+	return mScale;
+}
+
+const DirectX::SimpleMath::Vector3 GameObject::GetRotationGlobal() const
+{
+	if (mHasParent) {
+		// mRotation is relative to parent
+		return mpParent->GetRotationGlobal() + mRotation;
+	}
+	else
+	{
+		// No parent, so mRotation is global rotation
+		return mRotation;
+	}
+}
+
+const DirectX::SimpleMath::Vector3& GameObject::GetRotation() const
+{
+	return mRotation;
+}
+
 const Mesh& GameObject::GetMesh() const
 {
 	assert(mpMesh);
@@ -55,12 +109,13 @@ const Mesh& GameObject::GetMesh() const
 DirectX::SimpleMath::Matrix GameObject::GetWorldMatrix() const
 {
 	using namespace DirectX::SimpleMath;
+	const Vector3& globalRotation = GetRotationGlobal();
 	Matrix worldMatrix = 
-		Matrix::CreateScale(mScale)
-		* Matrix::CreateRotationX(mRotation.x)
-		* Matrix::CreateRotationY(mRotation.y)
-		* Matrix::CreateRotationZ(mRotation.z)
-		* Matrix::CreateTranslation(mPosition);
+		Matrix::CreateScale(GetScaleGlobal())
+		* Matrix::CreateRotationX	(globalRotation.x	)
+		* Matrix::CreateRotationY	(globalRotation.y	)
+		* Matrix::CreateRotationZ	(globalRotation.z	)
+		* Matrix::CreateTranslation(GetPositionGlobal());
 	return worldMatrix;
 }
 
@@ -68,16 +123,7 @@ DirectX::SimpleMath::Matrix GameObject::GetWorldMatrix() const
 
 const Material& GameObject::GetOverrideMat() const
 {
-
 	return mOverrideMaterial;
-}
-
-
-void GameObject::SetWorldMatrix(const DirectX::SimpleMath::Vector3& newPosition, const DirectX::SimpleMath::Vector3& newScale, const DirectX::SimpleMath::Vector3& newRotation)
-{
-	SetPosition(newPosition);
-	SetScale(newScale);
-	SetRotation(newRotation);
 }
 
 void GameObject::SetUseOverrideMat(bool newUseState)

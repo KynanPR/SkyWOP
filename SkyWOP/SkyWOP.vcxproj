@@ -106,6 +106,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerLimb.cpp" />
     <ClCompile Include="ShaderTypes.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TexCache.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="PlayerLimb.hpp" />
     <ClInclude Include="ShaderTypes.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sprite.h" />
